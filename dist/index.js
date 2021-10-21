@@ -122,7 +122,7 @@ class Utils {
             let args = [];
             let buildConfigFilePath = core.getInput(Utils.BUILD_CONFIG_FILE_PATH);
             if (buildConfigFilePath) {
-                buildConfigFilePath = buildConfigFilePath;
+                //buildConfigFilePath = buildConfigFilePath;
             }
             else {
                 buildConfigFilePath = ".";
