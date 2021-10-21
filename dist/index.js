@@ -105,7 +105,7 @@ class Utils {
         if (buildNumberEnv) {
             core.exportVariable("JFROG_CLI_BUILD_NUMBER", buildNumberEnv);
         }
-        let buildProjectEnv = core.getInput(Utils.JFROF_PROJECT);
+        let buildProjectEnv = core.getInput(Utils.JFROG_PROJECT);
         if (buildProjectEnv) {
             core.exportVariable("JFROG_CLI_BUILD_PROJECT", buildProjectEnv);
         }
@@ -120,6 +120,13 @@ class Utils {
         return __awaiter(this, void 0, void 0, function* () {
             let res = 0;
             let args = [];
+            let buildConfigFilePath = core.getInput(Utils.BUILD_CONFIG_FILE_PATH);
+            if (buildConfigFilePath) {
+                buildConfigFilePath = buildConfigFilePath;
+            }
+            else {
+                buildConfigFilePath = ".";
+            }
             if (core.getInput(Utils.BUILD_TYPE) == "maven-build") {
                 args = [
                     "rt",
@@ -130,7 +137,7 @@ class Utils {
                         core.getInput(Utils.RESOLVE_SNAPSHOT_REPO),
                 ];
                 res = yield (0, exec_1.exec)("jfrog", args);
-                args = ["rt", "mvn", "clean", "install"];
+                args = ["rt", "mvn", "clean", "install", "-f", buildConfigFilePath];
                 res = yield (0, exec_1.exec)("jfrog", args);
             }
             if (core.getInput(Utils.BUILD_TYPE) == "maven-deploy") {
@@ -195,7 +202,7 @@ class Utils {
                     core.getInput(Utils.PROMOTE_BUILD_NAME),
                     core.getInput(Utils.PROMOTE_BUILD_NUMBER),
                     core.getInput(Utils.PROMOTE_TO_REPO),
-                    "--project=" + core.getInput(Utils.JFROF_PROJECT),
+                    "--project=" + core.getInput(Utils.JFROG_PROJECT),
                     "--source-repo=" + core.getInput(Utils.PROMOTE_SOURCE_REPO),
                     "--copy=true",
                 ];
@@ -230,7 +237,7 @@ Utils.RESOLVE_SNAPSHOT_REPO = "resolve-snapshot-repository";
 Utils.DEPLOY_SNAPSHOT_REPO = "deploy-snapshot-Repository";
 Utils.RESOLVE_RELEASE_REPO = "resolve-releases-repository";
 Utils.DEPLOY_RELEASE_REPO = "deploy-releases-repository";
-Utils.JFROF_PROJECT = "jfrog-project";
+Utils.JFROG_PROJECT = "jfrog-project";
 Utils.DOCKER_IMAGE = "docker-image";
 Utils.DOCKER_IMAGE_TAG = "docker-image-tag";
 Utils.DOCKER_REPO = "docker-repo";
@@ -240,6 +247,7 @@ Utils.PROMOTE_TO_REPO = "promote-to-repo";
 Utils.PROMOTE_BUILD_NAME = "promote-build-name";
 Utils.PROMOTE_BUILD_NUMBER = "promote-build-number";
 Utils.PROMOTE_SOURCE_REPO = "promote-source-repo";
+Utils.BUILD_CONFIG_FILE_PATH = "build-config-file-path";
 
 
 /***/ }),

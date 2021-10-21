@@ -33,6 +33,8 @@ export class Utils {
   public static readonly PROMOTE_BUILD_NAME: string = "promote-build-name";
   public static readonly PROMOTE_BUILD_NUMBER: string = "promote-build-number";
   public static readonly PROMOTE_SOURCE_REPO: string = "promote-source-repo";
+  public static readonly BUILD_CONFIG_FILE_PATH: string =
+    "build-config-file-path";
 
   public static setCliEnv() {
     core.exportVariable(
@@ -66,6 +68,16 @@ export class Utils {
   public static async run() {
     let res: number = 0;
     let args: string[] = [];
+
+    let buildConfigFilePath: string = core.getInput(
+      Utils.BUILD_CONFIG_FILE_PATH
+    );
+    if (buildConfigFilePath) {
+      buildConfigFilePath = buildConfigFilePath;
+    } else {
+      buildConfigFilePath = ".";
+    }
+
     if (core.getInput(Utils.BUILD_TYPE) == "maven-build") {
       args = [
         "rt",
@@ -76,7 +88,7 @@ export class Utils {
           core.getInput(Utils.RESOLVE_SNAPSHOT_REPO),
       ];
       res = await exec("jfrog", args);
-      args = ["rt", "mvn", "clean", "install"];
+      args = ["rt", "mvn", "clean", "install", "-f", buildConfigFilePath];
       res = await exec("jfrog", args);
     }
     if (core.getInput(Utils.BUILD_TYPE) == "maven-deploy") {

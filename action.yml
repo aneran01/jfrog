@@ -62,6 +62,9 @@ inputs:
   promote-source-repo:
     description: "action to be taken"
     required: false
+  build-config-file-path:
+    description: "path for gradle/pom file if not default"
+    required: false
 
 runs:
   using: "node12"
